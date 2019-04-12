@@ -12,11 +12,10 @@ export default function findPossibleMoves(pp, bs, cells) {
 
   /*oreze prazdne kolonky a pozice, kde uz je hrac*/
   let possibleMoves = [];
-  for(let e of possibleMovesIndexes){
-    if(e !== false && !cells[e].player) possibleMoves.push(e);
+  for (let e of possibleMovesIndexes) {
+    if (e !== false && !cells[e].player) possibleMoves.push(e);
   }
 
-  console.log(possibleMoves);
   /*vraci array of indexes of cells in boardCells*/
   return possibleMoves;
 }
