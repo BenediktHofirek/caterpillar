@@ -1,0 +1,8 @@
+{
+  "player0Color": "#1a8cff",
+  "player1Color": "#e6ac00",
+  "player0HeadColor": "#004d99",
+  "player1HeadColor": "#996600",
+  "itemColor": "green",
+  "emptyCellColor": "white"
+}
