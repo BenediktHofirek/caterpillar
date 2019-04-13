@@ -1,8 +1,8 @@
 import findPossibleMoves from "./findPossibleMoves";
 
 export default function findBestMove(
-  boardCells,
   playerPosition,
+  boardCells,
   boardSize,
   calcDepthForNextMove,
   badMoves
@@ -16,21 +16,29 @@ export default function findBestMove(
     boardCells
   );
 
+  /*pokud je jenom jediny mozny tah, udela ho*/
+  if (givenPossibleMoves.length === 1) {
+    return givenPossibleMoves[0];
+  } else if (givenPossibleMoves.length === 0) return null;
+
   let possibleMoves = [];
 
   if (badMoves && badMoves.length !== 0) {
-    console.log("BADMOVES", badMoves, playerPosition);
-    possibleMoves.push(...givenPossibleMoves.filter(e => !badMoves.find(e)));
+    for (let e of givenPossibleMoves) {
+      if (badMoves.findIndex(bm => bm === e) === -1) {
+        possibleMoves.push(e);
+      }
+    }
   } else {
     possibleMoves.push(...givenPossibleMoves);
   }
 
+  /*v kratkem vyhledavani se jednotlivym moznostem prideli array, takze searchResults je [[],[]], aby slo urcit,
+  ze ktereho korene nalezeny item pochazi. Rozvinute vysledky se pak opet ukladaji do searchResults pro dalsi uroven vypoctu*/
+
   /*pokud se nema prejit rovnou na hluboky vypocet, a tedy je calcDepth > 0*/
   if (!calcDepthForNextMove) {
-    /*pokud je jenom jediny mozny tah, udela ho*/
-    if (possibleMoves.length === 1) {
-      return possibleMoves[0];
-    } else if (possibleMoves.length === 0) return null;
+    
 
     /*obrati s pravdepodobnosti 50% poradi moznych tahu, aby nejezdil jenom smer levy horni roh*/
     const reverse = Math.round(Math.random());
@@ -51,15 +59,15 @@ export default function findBestMove(
 
     let i = 0;
     const failureConstant = 100000;
+    let visitedCells = [];
 
     while (i < calculationDepht) {
-      /*condition hlida jestli se nasel "food"*/
-      let visitedCells = [];
-
       for (let a1c = 0; a1c < searchResults.length; a1c++) {
         if (searchResults[a1c] === failureConstant) continue;
         let subResults = [];
-        subResults.push(...searchResults[a1c]);
+        for (let e of searchResults[a1c]) {
+          subResults.push(e);
+        }
         let temporaryResults = [];
 
         /*dalsi uroven v tazich, tedy o pole dal ve vsech moznostech; mohou se najit stejne moznoti tahu
@@ -81,28 +89,22 @@ export default function findBestMove(
           /*zapise nova pole do tabulky projitych poli
          a zapise nove subvysledky do subResults*/ else {
             visitedCells.push(temp);
-            subResults.push(temp);
+            searchResults[a1c].push(temp);
           }
         }
 
         /*pokud se nelze dostat dale, zkonci a zapise 1 000 000 jako indikaci, ze item nebyl nalezen*/
-        if (subResults.length === 0) {
-          searchResults[a1c] = [];
+        if (searchResults[a1c].length === 0) {
           searchResults[a1c].push(failureConstant);
           continue;
         }
 
-        /*kontrola jestli byl nalezen "food"; pokud ano, vrati hodnotu daneho tahu. Jinak zapise subResults
-      do searchResults*/
-        for (let sub of subResults) {
+        /*kontrola jestli byl nalezen "food"; pokud ano, vrati hodnotu daneho tahu.*/
+        for (let sub of searchResults[a1c]) {
           if (boardCells[sub].item) {
             return possibleMoves[a1c];
           }
         }
-
-        /*Jinak zapise ...*/
-        searchResults[a1c] = [];
-        searchResults[a1c].push(...subResults);
       }
       /*posun o jedno na dalsi hloubku v prohledavani*/
       i++;
@@ -110,71 +112,55 @@ export default function findBestMove(
   }
 
   /*pokud se na dane hloubce nenasel item, prejde se na hloubkove prohledavani*/
-  if (possibleMoves.length === 1) {
-    return {
-      targetIndex: possibleMoves[0],
-      calcDepthForNextMove: calcDepthForNextMove ? calcDepthForNextMove - 1 : 0
-    };
-  } else if (possibleMoves.length === 0) return null;
 
   let itemsIndexes = []; //indexy itemu v boardCells
   for (let i = 0; i < boardCells.length; i++) {
     if (boardCells[i].item) itemsIndexes.push(i);
   }
-  console.log("possibleMoves", possibleMoves);
-  console.log("itemsIndexesx", itemsIndexes);
+  /*pokud neni zadny item, nedelat tah*/
+  if (itemsIndexes.length === 0) return null;
 
   /*spocita vzdalenost jednotlivych itemu k hraci*/
   //vzdalenosti indexu jednotlivych itemu od playera, array*/
   const itemsDistance = itemsIndexes.map(item => {
     return calculateItemDistace(item, playerPosition, boardSize);
   });
-  console.log("itemsDistance", itemsDistance);
 
-  /*hodnota nejmensiho v tabulce indexu indexu na itemy :-)*/
+  /*hodnota nejmensiho v tabulce indexu indexu na itemy v boardCells :-)*/
   const smallestDistance = Math.min(...itemsDistance);
   /*dodelat, aby v pripade stejne vzdalenosti dvou itemu bral ten, od ktereho je dale souper*/
-  console.log("smallestDistance", smallestDistance);
 
   /*index nejmensiho v tabulce indexu :-)*/
   const indexOfSmalestDistace = itemsDistance.findIndex(
     e => e === smallestDistance
   );
-  console.log("indexOfSmalestDistace", indexOfSmalestDistace);
 
   /*index nejblizsiho itemu v boardCells*/
   const smallestItemIndexInBoardCells = itemsIndexes[indexOfSmalestDistace];
-  console.log("smallestItemIndexInBoardCells", smallestItemIndexInBoardCells);
 
   /*najde nejblizsi mozny pohyb z possibleMoves k nejblizsimu indexu*/
 
   const distanceOfPossibleMovesToItem = possibleMoves.map(item =>
     calculateItemDistace(item, smallestItemIndexInBoardCells, boardSize)
   );
-  console.log("distanceOfPossibleMovesToItem", distanceOfPossibleMovesToItem);
 
   /*najde pohyb s nejkratsi vzdalenosti v tabulce possibleMoves*/
   const moveWithShortestDistance = Math.min(...distanceOfPossibleMovesToItem);
   const indexOfMoveWithShortestDistance = distanceOfPossibleMovesToItem.findIndex(
     e => e === moveWithShortestDistance
   );
-  console.log("moveWithShortestDistance", moveWithShortestDistance);
-  console.log(
-    "indexOfMoveWithShortestDistance",
-    indexOfMoveWithShortestDistance
-  );
-  console.log(
-    "possibleMoves[indexOfMoveWithShortestDistance]",
-    possibleMoves[indexOfMoveWithShortestDistance]
-  );
-  console.log("playerposiiton", playerPosition);
+
+  const newCalcDepth =
+    moveWithShortestDistance > calculationDepht && calcDepthForNextMove
+      ? calcDepthForNextMove - 1
+      : moveWithShortestDistance - calculationDepht - 1;
 
   /*vrati pocet tahu, po ktere je zbytecne provadet kratkou kalkulaci*/
   return {
     targetIndex: possibleMoves[indexOfMoveWithShortestDistance],
     calcDepthForNextMove: calcDepthForNextMove
       ? calcDepthForNextMove - 1
-      : moveWithShortestDistance - calculationDepht - 1
+      : newCalcDepth
   };
 }
 

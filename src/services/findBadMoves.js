@@ -1,9 +1,12 @@
 import findPossibleMoves from "./findPossibleMoves";
+import findWay from "./findWay";
 
-export default function findBadMoves() {
+export default function findbadMovesIndexes() {
   /*predpoklad ze computer player ma cislo 1*/
   const { boardSize, boardCells } = this.state;
   const computerPlayer = 1;
+  const calculationDepht = boardSize; //hloubka hledani bude toto
+  let badMovesIndexes = [];
 
   const playerPosition = boardCells.findIndex(
     cell =>
@@ -13,57 +16,32 @@ export default function findBadMoves() {
   );
 
   const givenMoves = findPossibleMoves(playerPosition, boardSize, boardCells);
-  /*testuje se, jestli se da alespon na jednom z osmi smeru dostat na vzdalenost boardSize/2*/
-  const possibleDirections = [
-    [-boardSize, -boardSize],
-    [-boardSize, 1],
-    [1, 1],
-    [1, boardSize],
-    [boardSize, boardSize],
-    [boardSize, -1],
-    [-1, -1],
-    [-1, -boardSize]
-  ];
+
+  for (let i = 0; i < givenMoves.length; i++) {
+    /*pokud se nepodari z jednoho z given moves najit cestu*/
+    /*do findway se posila konkretni index, ne array; vraci se maximalni delka cesty nebo 1000, pokud je cesta pruchozi*/
+    const wayLength = findWay(givenMoves[i], boardCells, boardSize, calculationDepht, computerPlayer);
+    /*v badMovesIndexes se uchovava hloubka cesty jednotlivych indexu z givenMoves*/
+    badMovesIndexes.push(wayLength);
+  }
 
   let badMoves = [];
-  console.log("given",givenMoves)
-  for (let i = 0; i < givenMoves.length; i++) {
-    /*pokud vsechny smery selzou, tah je spatny*/
-    let moveIsBad = true;
-
-    for (let x = 0, noWay = true; x < possibleDirections.length && noWay; x++) {
-      const direction = possibleDirections[x];
-      console.log(direction);
-      let position = playerPosition;
-      let path = [];
-      console.log(path)
-      for (let y = 0; y < boardSize / 4; y++) {
-        path.push(...direction);
-      }
-
-      for (let z = 0; z < path.length; z++) {
-        let previousPosition = position;
-        console.log(typeof boardCells[position].player);
-        position += direction.pop(); //na poradi vytazenych elementu nezalezi
-        if (
-          typeof boardCells[position].player === "undefined" ||
-          position < 0 ||
-          position >= boardSize ** 2 ||
-          ((previousPosition + 1) % boardSize === 0 &&
-            position % boardSize === 0) ||
-          ((position + 1) % boardSize === 0 &&
-            previousPosition % boardSize === 0)
-        )
-          break;
-        else if (z === path.length - 1) {
-          //pokud je cesta pruchozi
-          noWay = false;
-          moveIsBad = false;
-        }
+  /*pokud jsou spatne vsechny moznosti (tedy zadna nema hodnotu 1000), 
+  vymaze tu nejmene spatnou, aby bylo mozne udelat tah*/
+  if(!badMovesIndexes.find(e => e === 1000)){
+    let bestMove = Math.max(...badMovesIndexes);
+    for(let i = 0; i<givenMoves.length; i++){
+      if(badMovesIndexes[i] !== bestMove){
+        badMoves.push(givenMoves[i]);
       }
     }
-    if (moveIsBad) badMoves.push(givenMoves[i]);
+  }else{
+    for(let i = 0; i < givenMoves.length; i++){
+      if(badMovesIndexes[i] !== 1000){
+        badMoves.push(givenMoves[i]);
+      }
+    }
   }
-  
+
   return badMoves;
 }

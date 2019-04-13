@@ -8,20 +8,27 @@ import boardSetup from "../services/boardSetup";
 
 class CaterpilarGame extends Component {
   state = {
-    boardSize: 18,
-    itemsToCollectCount: 400
+    boardSize: 20,
+    itemsToCollectCount: 100
   };
 
   constructor() {
     super();
     this.state.boardCells = boardSetup.makeBoardCells(this.state);
     this.state.computerRunning = 0;
-    this.state.computerLevel = 9.999;
-    this.state.levelCount = 10;
+    /*computer level 1-10*/
+    this.state.computerLevel = 1;
+    this.state.computerLevelRange = [5, 4, 3.2, 2.5, 1.8, 1.3, 1, 0.7, 0.5, 0.3];
     this.handleHumanMove = handleHumanMove.bind(this);
     this.handleComputerMove = handleComputerMove.bind(this);
     this.findWinner = findWinner.bind(this);
     this.findBadMoves = findBadMoves.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    const badMovesUpdate = this.state.badMoves === nextState.badMoves;
+    const computerTimeoutRefUpdate = this.state.computerTimeoutRef === nextState.computerTimeoutRef;
+    return (badMovesUpdate && computerTimeoutRefUpdate);
   }
 
   componentDidUpdate() {
@@ -41,17 +48,15 @@ class CaterpilarGame extends Component {
   }
 
   makeComputerMove = () => {
-    const { computerLevel: level, levelCount } = this.state;
+    const { computerLevel: level, computerLevelRange: range } = this.state;
+    /* -1 protoze level ma cislovani od jednicky*/
+    const currentLevel = range[level-1];
     const random = Math.random();
-    const timeout = Math.ceil(random * 1000) * (levelCount - level);
+    const sing = Math.round(Math.random()) ? -1 : 1 ;
+    const timeout = (currentLevel + Math.ceil(random * currentLevel/2)) * 1000 * sing;
+    console.log(timeout/1000);
     const timeoutRef = setTimeout(this.handleComputerMove, timeout);
     this.setState({ computerTimeoutRef: timeoutRef });
-    /*v case mezi jednotlivymi tahy pocitace probehne ochrana proti zamotani*/
-    const badMoves = this.findBadMoves();
-    if (badMoves.length !== 0) {this.setState({ badMoves }); 
-    console.log("BadMove FINDED", badMoves);
-  
-  };
   };
 
   render() {

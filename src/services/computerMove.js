@@ -15,8 +15,8 @@ export default function handleComputerMove() {
   );
 
   const bestMove = findBestMove(
-    boardCells,
     playerPosition,
+    boardCells,
     boardSize,
     calcDepthForNextMove,
     badMoves
@@ -40,10 +40,18 @@ export default function handleComputerMove() {
 
   /*!!!!!!!!!!!!!POZOR, JE NUTNE DAT === NULL, PROTOZE TARGER MUZE BYT I NA POLE 0!!!!!!!!!!!!!!*/
   if (targetIndex === null) {
-    this.setState({ computerRunning: 1 }); //!!!!!!!!!Tady ma byt v produkcnim 1!!!!!!*/
+    this.setState({ computerRunning: 0 }); //!!!!!!!!!Tady ma byt v produkcnim 1!!!!!!*/
     return;
   }
 
   const newBoardCells = makeMove(oldBoardCells, targetIndex, playerPosition);
   this.setState({ boardCells: newBoardCells, computerRunning: 0 });
+  /*v case mezi jednotlivymi tahy pocitace probehne ochrana proti zamotani*/
+  /*zde to tolik casove nevadi, protoze pocitac prave udelal tah a 
+  tato pauza se zapocita do casu mezi tahy*/
+  const newBadMoves = this.findBadMoves();
+  /*update pouze, pokud jsou nove badMoves odlisne od starych*/
+  if (newBadMoves !== badMoves) {
+    this.setState({ badMoves: newBadMoves });
+  }
 }
