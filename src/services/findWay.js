@@ -15,9 +15,7 @@ export default function findWay(
   let visitedCells = [position];
 
   while (
-    i < calculationDepht &&
-    subResults.length < Math.floor(calculationDepht * 2)/*tady je otazka, jestli a kolik zvolit*/
-  ) {
+    i < calculationDepht) {
     let temporaryResults = [];
     /*dalsi uroven v tazich; mohou se najit stejne moznoti tahu
       na ruznych polich (*), proto je nutna filtrace uz zde, napr

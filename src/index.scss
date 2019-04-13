@@ -6,6 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  min-height: 100%;
 }
 
 code {
@@ -13,8 +15,26 @@ code {
     monospace;
 }
 
+header{
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  background-color: green;
+  text-align: center;
+  font-size: 20px;
+  height: 150px;
+
+  h1 {
+    position: relative;
+    float: left;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 table {
-  margin: auto;
+  margin: 30px auto;
   padding: 0px;
   border-collapse: collapse;
 
@@ -24,5 +44,11 @@ table {
     width: 40px;
     height: 40px;
     border: 1px solid black;
+    text-align: center;
   }
+}
+
+footer {
+  margin: auto;
+  padding: 0px;
 }

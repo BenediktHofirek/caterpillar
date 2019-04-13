@@ -33,25 +33,25 @@ export default function handleComputerMove() {
       calcDepthForNextMove
     });
     return;
-  }
-  /*pokud se nenaplnila predchozi podminka*/
-  const targetIndex = bestMove;
-  /*pokud nelze udelat tah nebo neni uz zadny item, tah se neprovede*/
+  }else {
+    /*pokud se nenaplnila predchozi podminka*/
+    const targetIndex = bestMove;
+    /*pokud nelze udelat tah nebo neni uz zadny item, tah se neprovede*/
+    
+    /*!!!!!!!!!!!!!POZOR, JE NUTNE DAT === NULL, PROTOZE TARGER MUZE BYT I NA POLE 0!!!!!!!!!!!!!!*/
+    /*pokud neni mozne udelat tah, pokusi se o dalsi tah az za 5 vterin*/
+    if (targetIndex === null) {
+      const { computerLevel: level, computerLevelRange: range} = this.state;
+      const timeout = 1000 * (5 - range[level-1]);
+      setTimeout(() => this.setState({ computerRunning: 0 }), timeout); 
+      //!!!!!!!!!Vyse ma byt v produkcnim 0!!!!!!*/
+      return;
+    }
 
-  /*!!!!!!!!!!!!!POZOR, JE NUTNE DAT === NULL, PROTOZE TARGER MUZE BYT I NA POLE 0!!!!!!!!!!!!!!*/
-  if (targetIndex === null) {
-    this.setState({ computerRunning: 0 }); //!!!!!!!!!Tady ma byt v produkcnim 1!!!!!!*/
-    return;
-  }
-
-  const newBoardCells = makeMove(oldBoardCells, targetIndex, playerPosition);
-  this.setState({ boardCells: newBoardCells, computerRunning: 0 });
-  /*v case mezi jednotlivymi tahy pocitace probehne ochrana proti zamotani*/
-  /*zde to tolik casove nevadi, protoze pocitac prave udelal tah a 
-  tato pauza se zapocita do casu mezi tahy*/
-  const newBadMoves = this.findBadMoves();
-  /*update pouze, pokud jsou nove badMoves odlisne od starych*/
-  if (newBadMoves !== badMoves) {
-    this.setState({ badMoves: newBadMoves });
+    const newBoardCells = makeMove(oldBoardCells, targetIndex, playerPosition);
+    this.setState({ boardCells: newBoardCells, computerRunning: 0 });
+    console.log("State", playerPosition);
+    console.log("Target", targetIndex);
+    console.log("BADDDDD", badMoves);
   }
 }

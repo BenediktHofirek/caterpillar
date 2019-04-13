@@ -7,11 +7,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
+      <React.Fragment>
+        <header>
+          <h1>Caterpillar</h1>
+        </header>
+        <div className="game-board">
           <CaterpillarGame />
         </div>
-      </div>
+        <footer>
+          <nav>
+            <a href="#">About</a>
+          </nav>
+        </footer>
+      </React.Fragment>
     );
   }
 }

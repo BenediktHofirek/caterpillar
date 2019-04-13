@@ -21,9 +21,12 @@ export default function findbadMovesIndexes() {
     /*pokud se nepodari z jednoho z given moves najit cestu*/
     /*do findway se posila konkretni index, ne array; vraci se maximalni delka cesty nebo 1000, pokud je cesta pruchozi*/
     const wayLength = findWay(givenMoves[i], boardCells, boardSize, calculationDepht, computerPlayer);
+   console.log("wayLength", wayLength)
     /*v badMovesIndexes se uchovava hloubka cesty jednotlivych indexu z givenMoves*/
     badMovesIndexes.push(wayLength);
   }
+  console.log("BadState", playerPosition);
+  console.log("badMovesIndexes", badMovesIndexes);
 
   let badMoves = [];
   /*pokud jsou spatne vsechny moznosti (tedy zadna nema hodnotu 1000), 
