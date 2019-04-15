@@ -37,13 +37,13 @@ class CaterpilarGame extends Component {
     computerRunning: 0,
 
     /*computer level 1-15*/
-    computerLevel: 1,
-    computerLevelRange: computerLevelRange,
+    computerLevel: 5,
+    computerLevelRange: computerLevelRange
   };
 
   constructor() {
-    super();  
-    
+    super();
+
     this.boardSetup = boardSetup.bind(this);
     this.handleHumanMove = handleHumanMove.bind(this);
     this.handleComputerMove = handleComputerMove.bind(this);
@@ -59,8 +59,8 @@ class CaterpilarGame extends Component {
   }
 
   /*pro nacteni boardu pri prvnim nacteni stranky*/
-  componentWillMount(){
-    if(!this.state.boardCells){
+  componentWillMount() {
+    if (!this.state.boardCells) {
       this.makeNewBoard();
     }
   }
@@ -71,12 +71,15 @@ class CaterpilarGame extends Component {
     /*winner muze byt i hrac nula, proto se returnuje null pri neuspechu*/
     if (winner !== null) {
       /*pokud vyhral clovek, vypne se stroj aby nedelal dalsi tah*/
-      if (winner === 0) clearTimeout(computerTimeoutRef);
-      else if (winner === "draw") clearTimeout(computerTimeoutRef);
+      if (winner === 0) {
+        clearTimeout(computerTimeoutRef);
+        this.setState({ winner });
+      } else if (winner === "draw") {
+        clearTimeout(computerTimeoutRef);
+        this.setState({ winner });
+      }
       return;
-    }
-
-    else if (!computerRunning && gameHasStarted) {
+    } else if (!computerRunning && gameHasStarted) {
       this.setState({ computerRunning: 1 });
       this.handleBadMoves();
       this.makeComputerMove();
@@ -106,45 +109,44 @@ class CaterpilarGame extends Component {
 
   stopGame = () => {
     const { computerTimeoutRef } = this.state;
-    if(computerTimeoutRef) clearTimeout(computerTimeoutRef);
+    if (computerTimeoutRef) clearTimeout(computerTimeoutRef);
     this.setState({ computerRunning: 0, gameHasStarted: false });
-  }
+  };
 
   handleNewGame = () => {
     this.stopGame();
     this.makeNewBoard();
   };
 
-  proofItemsCount = (boardCells) => {
+  proofItemsCount = boardCells => {
     /*zajisti, aby pocet itemu nebyl nula*/
     const count = boardCells.filter(e => e.item === "item").length;
-    return count;/*kdyz je count nula, vrati se false*/
-  }
-  
+    return count; /*kdyz je count nula, vrati se false*/
+  };
+
   makeNewBoard = async () => {
     let newBoardCells;
-    while(true){
+    while (true) {
       newBoardCells = this.boardSetup();
-      if(this.proofItemsCount(newBoardCells)) break;
+      if (this.proofItemsCount(newBoardCells)) break;
     }
 
-    await this.setState({ boardCells: newBoardCells});
-  }
+    await this.setState({ boardCells: newBoardCells });
+  };
 
   handleLevelChange = ({ currentTarget }) => {
     this.setState({ computerLevel: currentTarget.value });
   };
 
-
   handleShowSettings = () => {
-     this.stopGame();
-     this.setState({ showSettings: true });
+    this.stopGame();
+    this.setState({ showSettings: true });
   };
 
-  handleSettingsChange = async(newState) => {
-    await this.setState({ ...newState});
-   this.makeNewBoard();
-   this.setState({showSettings: false});
+  handleSettingsChange = async newState => {
+    await this.setState({ ...newState });
+    this.makeNewBoard();
+    this.setState({ showSettings: false });
   };
 
   render() {
@@ -156,7 +158,8 @@ class CaterpilarGame extends Component {
       itemColor,
       emptyCellColor,
       computerLevel,
-      itemsToCollectCount
+      itemsToCollectCount,
+      winner
     } = this.state;
     return (
       <React.Fragment>
@@ -168,23 +171,26 @@ class CaterpilarGame extends Component {
           changeLevel={this.handleLevelChange}
           showSettings={this.handleShowSettings}
         />
-        {(showSettings && 
-        <Settings 
-        handleSettingsChange={this.handleSettingsChange}
-        boardSize={boardSize}
-        emptyCellColor={emptyCellColor}
-        itemColor={itemColor}
-        itemsToCollectCount={itemsToCollectCount}
-        playersColors={playersColors}
-        />) ||
-        <Board
-          boardCells={boardCells}
-          boardSize={boardSize}
-          playersColors={playersColors}
-          itemColor={itemColor}
-          emptyCellColor={emptyCellColor}
-          onKeyDown={this.handleHumanMove}
-        />}
+        <div>{winner}</div>
+        {(showSettings && (
+          <Settings
+            handleSettingsChange={this.handleSettingsChange}
+            boardSize={boardSize}
+            emptyCellColor={emptyCellColor}
+            itemColor={itemColor}
+            itemsToCollectCount={itemsToCollectCount}
+            playersColors={playersColors}
+          />
+        )) || (
+          <Board
+            boardCells={boardCells}
+            boardSize={boardSize}
+            playersColors={playersColors}
+            itemColor={itemColor}
+            emptyCellColor={emptyCellColor}
+            onKeyDown={this.handleHumanMove}
+          />
+        )}
       </React.Fragment>
     );
   }

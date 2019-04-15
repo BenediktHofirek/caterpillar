@@ -13,15 +13,13 @@ class App extends Component {
           <Route />
         </Switch>
         <header>
-          <h1>Caterpillar</h1>
+            <h1>Caterpillar</h1>
         </header>
         <div className="caterpillar-game">
           <CaterpillarGame />
         </div>
         <footer>
-          <nav>
-            <a href="#">About</a>
-          </nav>
+          {"© 2019 Benedikt Hofirek. All rights reserved."}
         </footer>
       </React.Fragment>
     );

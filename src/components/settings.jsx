@@ -64,7 +64,7 @@ class Settings extends Component {
           <button
             type="button"
             onClick={() => handleSettingsChange(this.state)}
-            className="btn btn-primary"
+            className="btn btn-primary mt-5"
           >
             Save Changes
           </button>

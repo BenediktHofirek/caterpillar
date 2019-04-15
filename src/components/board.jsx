@@ -6,7 +6,7 @@ const Board = ({
   playersColors,
   itemColor,
   emptyCellColor,
-  onKeyDown
+  onKeyDown,
 }) => {
   return (
     <table onKeyDown={onKeyDown} tabIndex="0">
