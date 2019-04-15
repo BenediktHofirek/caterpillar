@@ -1,10 +1,12 @@
 import makeMove from "./makeMove";
-import findPossibleMoves from './findPossibleMoves';
+import findPossibleMoves from "./findPossibleMoves";
 
 export default function handleHumanMove({ key }) {
   /*predpoklad, ze clovek je player 0*/
   const humanPlayer = 0;
-  const { boardCells, boardSize } = this.state;
+  const { boardCells, boardSize, gameHasStarted } = this.state;
+
+  if (!gameHasStarted) this.setState({ gameHasStarted: true });
 
   const playerPosition = boardCells.findIndex(
     cell =>
@@ -13,7 +15,11 @@ export default function handleHumanMove({ key }) {
       cell.player.number === humanPlayer
   );
 
-  const possibleMovesIndexes = findPossibleMoves(playerPosition, boardSize, boardCells);
+  const possibleMovesIndexes = findPossibleMoves(
+    playerPosition,
+    boardSize,
+    boardCells
+  );
 
   let possibleMoves = [];
 
@@ -35,6 +41,6 @@ export default function handleHumanMove({ key }) {
     const oldBoardCells = [...boardCells];
 
     const newBoardCells = makeMove(oldBoardCells, targetIndex, playerPosition);
-    this.setState({ boardCells: newBoardCells });
+    this.setState({ boardCells: newBoardCells, gameHasStarted: 1 });
   }
 }

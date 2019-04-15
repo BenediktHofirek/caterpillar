@@ -1,25 +1,25 @@
 import React, { Component } from "react";
-import {
-  player0HeadColor,
-  player1HeadColor,
-  player0Color,
-  player1Color,
-  itemColor,
-  emptyCellColor
-} from "../services/config.json";
-import BoardCell from "./boardCell";
 
-const Board = ({ boardSize, boardCells, onKeyDown }) => {
+const Board = ({
+  boardSize,
+  boardCells,
+  playersColors,
+  itemColor,
+  emptyCellColor,
+  onKeyDown
+}) => {
   return (
     <table onKeyDown={onKeyDown} tabIndex="0">
-      <tbody>{makeBoard(boardSize, boardCells)}</tbody>
+      <tbody>
+        {makeBoard(boardSize, boardCells, playersColors, itemColor, emptyCellColor)}
+      </tbody>
     </table>
   );
 };
 
 export default Board;
 
-function makeBoard(boardSize, boardCells) {
+function makeBoard(boardSize, boardCells, playersColors, itemColor, emptyCellColor) {
   let board = [];
 
   for (let x = 0; x < boardSize; x++) {
@@ -32,7 +32,7 @@ function makeBoard(boardSize, boardCells) {
         <td
           key={y}
           style={{
-            backgroundColor: selectColor(player, item)
+            backgroundColor: selectColor(player, item, playersColors, itemColor, emptyCellColor)
           }}
         >
           {!player ? char : null}
@@ -46,11 +46,11 @@ function makeBoard(boardSize, boardCells) {
   return board;
 }
 
-function selectColor(player, item) {
+function selectColor(player, item, playersColors, itemColor, emptyCellColor) {
   if (player) {
     if (player.head === true)
-      return player.number === 0 ? player0HeadColor : player1HeadColor;
-    else return player.number === 0 ? player0Color : player1Color;
+      return playersColors[player.number].headColor;
+    else return playersColors[player.number].bodyColor;
   } else if (item === "item") return itemColor;
   else return emptyCellColor;
 }

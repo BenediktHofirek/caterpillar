@@ -1,13 +1,15 @@
-function makeBoardCells(state) {
-  const cellChars = makeCellChars(state);
-  const boardCells = makeBoardItems(state, cellChars);
+export default function boardSetup() {
+  const cellChars = makeCellChars(this.state);
+  const boardCells = makeBoardItems(this.state, cellChars);
   return boardCells;
 }
 
 function makeBoardItems(
-  { itemsToCollectCount: count, boardSize: size },
+  { itemsToCollectCount, boardSize: size },
   boardCells
 ) {
+  /*algoritmus pro vypocet idealniho poctu itemu na zaklade zadane velikosti*/
+  const count = itemsToCollectCount/10 * size**2;
   const sizePower = size ** 2;
   const probability = (count / sizePower) * 100;
 
@@ -23,6 +25,7 @@ function makeBoardItems(
     let index = Math.floor(Math.random() * sizePower);
     if (!boardCells[index].player) {
       boardCells[index].player = { number: i, head: true, foot: true };
+      boardCells[index].item = null;
       i++;
     }
   }
@@ -58,5 +61,3 @@ function makeCellChars({ boardSize: size }) {
   // 2 1 X
   return chars;
 }
-
-export default { makeBoardCells };

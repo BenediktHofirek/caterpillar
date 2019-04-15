@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import CaterpillarGame from "./components/caterpillarGame";
 import "./App.css";
 
@@ -8,10 +9,13 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <Switch>
+          <Route />
+        </Switch>
         <header>
           <h1>Caterpillar</h1>
         </header>
-        <div className="game-board">
+        <div className="caterpillar-game">
           <CaterpillarGame />
         </div>
         <footer>

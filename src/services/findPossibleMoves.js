@@ -13,7 +13,6 @@ export default function findPossibleMoves(pp, bs, cells) {
   /*oreze prazdne kolonky a pozice, kde uz je hrac*/
   let possibleMoves = [];
   for (let e of possibleMovesIndexes) {
-    // console.log(cells[e], typeof cells[e].player, cells[e].player)
     if (e !== false && cells[e] && !cells[e].player) possibleMoves.push(e);
   }
 
