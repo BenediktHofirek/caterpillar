@@ -89,6 +89,7 @@ class CaterpilarGame extends Component {
     if (newBadMoves !== this.state.badMoves) {
       this.setState({ badMoves: newBadMoves });
     }
+    return;
   };
 
   makeComputerMove = () => {
@@ -106,10 +107,10 @@ class CaterpilarGame extends Component {
   stopGame = () => {
     const { computerTimeoutRef } = this.state;
     if(computerTimeoutRef) clearTimeout(computerTimeoutRef);
-    this.setState({ computerRunning: 0 });
+    this.setState({ computerRunning: 0, gameHasStarted: false });
   }
 
-  handleNewGame = async () => {
+  handleNewGame = () => {
     this.stopGame();
     this.makeNewBoard();
   };
@@ -120,14 +121,14 @@ class CaterpilarGame extends Component {
     return count;/*kdyz je count nula, vrati se false*/
   }
   
-  makeNewBoard = () => {
-    let newBoardCells = [];
+  makeNewBoard = async () => {
+    let newBoardCells;
     while(true){
       newBoardCells = this.boardSetup();
       if(this.proofItemsCount(newBoardCells)) break;
     }
 
-    this.setState({ boardCells: newBoardCells});
+    await this.setState({ boardCells: newBoardCells});
   }
 
   handleLevelChange = ({ currentTarget }) => {
@@ -136,13 +137,13 @@ class CaterpilarGame extends Component {
 
 
   handleShowSettings = () => {
-    const { showSettings } = this.state;
-    this.setState({ showSettings: !showSettings });
+     this.stopGame();
+     this.setState({ showSettings: true });
   };
 
-  handleSettingsChange = async (newState) => {
+  handleSettingsChange = async(newState) => {
     await this.setState({ ...newState});
-    this.makeNewBoard();
+   this.makeNewBoard();
    this.setState({showSettings: false});
   };
 
@@ -155,7 +156,6 @@ class CaterpilarGame extends Component {
       itemColor,
       emptyCellColor,
       computerLevel,
-      gameHasStarted,
       itemsToCollectCount
     } = this.state;
     return (
@@ -172,9 +172,7 @@ class CaterpilarGame extends Component {
         <Settings 
         handleSettingsChange={this.handleSettingsChange}
         boardSize={boardSize}
-        computerLevel={computerLevel}
         emptyCellColor={emptyCellColor}
-        gameHasStarted={gameHasStarted}
         itemColor={itemColor}
         itemsToCollectCount={itemsToCollectCount}
         playersColors={playersColors}

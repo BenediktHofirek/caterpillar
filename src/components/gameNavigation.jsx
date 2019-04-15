@@ -21,7 +21,7 @@ const GameNavigation = ({ playersColors, showSettings, newGame, levelValue, chan
       </div>
       <form>
         <label htmlFor="levelRange">Level: {levelValue}</label>
-        <input type="range" name="levelRange" value={levelValue} onChange={changeLevel} className="custom-range" min="1" max="15" id="levelRange"/>
+        <input type="range" name="levelRange" value={levelValue} onChange={changeLevel} className="custom-range" min={1} max={15} id="levelRange"/>
       </form>
       <div className="game-buttons">
         <button className="button-settings" onClick={newGame}>New Game</button>

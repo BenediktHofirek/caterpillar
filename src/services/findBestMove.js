@@ -83,6 +83,7 @@ export default function findBestMove(
           }
         }
 
+        subResults.length = 0;
         /*kontrola jestli pole uz jednou nebylo nalezeno, aby se nechodilo v kruhu*/
         for (let temp of temporaryResults) {
           if (visitedCells.find(e => e === temp)) continue;
@@ -92,6 +93,8 @@ export default function findBestMove(
             searchResults[a1c].push(temp);
           }
         }
+
+        temporaryResults.length = 0;
 
         /*pokud se nelze dostat dale, zkonci a zapise 1 000 000 jako indikaci, ze item nebyl nalezen*/
         if (searchResults[a1c].length === 0) {

@@ -11,7 +11,7 @@ export default function findWinner() {
 
   if (
     Math.max(player0Count, player1Count) >
-    Math.min(player0Count, player1Count) + itemsCount
+    (Math.min(player0Count, player1Count) + itemsCount)
   ) {
     return player0Count > player1Count ? 0 : 1;
   } else if (itemsCount === 0 && player0Count === player1Count) {

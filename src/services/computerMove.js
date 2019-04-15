@@ -50,5 +50,6 @@ export default function handleComputerMove() {
 
     const newBoardCells = makeMove(oldBoardCells, targetIndex, playerPosition);
     this.setState({ boardCells: newBoardCells, computerRunning: 0 });
+     return;
   }
 }
