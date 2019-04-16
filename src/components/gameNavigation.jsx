@@ -42,13 +42,13 @@ const GameNavigation = ({
         </form>
         <div className="game-buttons">
           <button
-            className="btn m-2 btn-primary button-settings"
+            className="btn m-2 btn-primary button-new-game"
             onClick={newGame}
           >
             New Game
           </button>
           <button
-            className="btn m-2 btn-primary button-new-game"
+            className="btn m-2 btn-primary button-settings"
             onClick={showSettings}
           >
             Settings

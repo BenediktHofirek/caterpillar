@@ -9,10 +9,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  box-shadow: none !important;
 }
 
-#root{
+#root {
   display: flex;
   flex-direction: column;
   margin: 0px;
@@ -36,37 +36,37 @@ header {
   }
 }
 
-nav {
-  margin: 0px auto;
-  float: center;
-
-  .game-nav {
-    margin: 0px auto;
-    float: left;
-    width: 100%;
-    height: 70px;
-    max-width: 800px;
-
-    .player-information {
-      min-width: 6vw;
-      margin: 0.5vw 0px;
-      float: left;
-
-      .player-color {
-        float: left;
-        margin: 0px 0.5vw;
-        width: 25px;
-        height: 25px;
-      }
-    }
-  }
-}
-
 .caterpillar-game {
   margin: 0px 0px auto 0px;
   padding: 0px;
   float: left;
   width: 100%;
+
+  nav {
+    margin: 0px auto;
+    float: center;
+
+    .game-nav {
+      margin: 0px auto;
+      float: left;
+      width: 100%;
+      height: 70px;
+      max-width: 800px;
+
+      .player-information {
+        min-width: 6vw;
+        margin: 0.5vw 0px;
+        float: left;
+
+        .player-color {
+          float: left;
+          margin: 0px 0.5vw;
+          width: 25px;
+          height: 25px;
+        }
+      }
+    }
+  }
 
   table {
     float: center;
@@ -74,6 +74,11 @@ nav {
     padding: 0px;
     border-collapse: collapse;
     border: 1px solid rgb(119, 64, 32);
+    z-index: 1;
+
+    &:focus {
+      outline: none;
+    }
 
     td {
       margin: 0px;
@@ -87,13 +92,13 @@ nav {
   }
 }
 
-.settings{
+.settings {
   margin: 0px;
   padding: 50px 0px;
   width: 100%;
   float: left;
-  
-  form{
+
+  form {
     margin: auto;
     padding: 0px;
     width: 100%;
@@ -110,4 +115,31 @@ footer {
   margin: 0px;
   padding: 0.5vh;
   background-color: rgb(77, 153, 0);
+}
+.game-over-message-wrapper {
+  z-index: 10;
+  position: fixed;
+  top: 35vh;
+  width: 100vw;
+  height: 150px;
+
+  .game-over-message {
+    z-index: 10;
+    padding: 30px 0;
+    width: 350px;
+    height: 150px;
+    margin: 0px auto auto auto;
+    text-align: center;
+    font-size: 10rem;
+    border-radius: 10px;
+
+    button {
+      position: relative;
+      bottom: 100px;
+      margin: auto;
+      float: center;
+      width: 130px;
+      font-size: 1rem;
+    }
+  }
 }

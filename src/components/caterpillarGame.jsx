@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import GameNavigation from "./gameNavigation";
 import Settings from "./settings";
 import Board from "./board";
+import Winner from './winner';
 import boardSetup from "../services/boardSetup";
 import handleComputerMove from "../services/computerMove";
 import handleHumanMove from "../services/handleHumanMove";
@@ -17,9 +18,10 @@ import {
   emptyCellColor
 } from "../services/config.json";
 
+
 class CaterpilarGame extends Component {
   state = {
-    boardSize: 18,
+    boardSize: 4,
     /*od 1 do 5*/
     itemsToCollectCount: 3,
     playersColors: [
@@ -37,8 +39,10 @@ class CaterpilarGame extends Component {
     computerRunning: 0,
 
     /*computer level 1-15*/
-    computerLevel: 5,
-    computerLevelRange: computerLevelRange
+    computerLevel: 15,
+    computerLevelRange: computerLevelRange,
+
+    winner: null
   };
 
   constructor() {
@@ -65,20 +69,21 @@ class CaterpilarGame extends Component {
     }
   }
 
+  componentDidMount(){
+    
+  }
+
   componentDidUpdate() {
-    const { computerTimeoutRef, computerRunning, gameHasStarted } = this.state;
-    const winner = this.findWinner();
+    const { computerTimeoutRef, computerRunning, gameHasStarted, winner } = this.state;
+    /*pokud ma hra viteze, uz se dale nepokracuje*/
+    if(winner !== null) return;
+
+    const givenWinner = this.findWinner();
     /*winner muze byt i hrac nula, proto se returnuje null pri neuspechu*/
-    if (winner !== null) {
-      /*pokud vyhral clovek, vypne se stroj aby nedelal dalsi tah*/
-      if (winner === 0) {
-        clearTimeout(computerTimeoutRef);
-        this.setState({ winner });
-      } else if (winner === "draw") {
-        clearTimeout(computerTimeoutRef);
-        this.setState({ winner });
-      }
-      return;
+    if (givenWinner !== null ) {
+      /*pokud hra skoncila, zapise se vytez a vypne se protihrac*/
+      clearTimeout(computerTimeoutRef);
+      this.setState({ winner: givenWinner });
     } else if (!computerRunning && gameHasStarted) {
       this.setState({ computerRunning: 1 });
       this.handleBadMoves();
@@ -110,7 +115,7 @@ class CaterpilarGame extends Component {
   stopGame = () => {
     const { computerTimeoutRef } = this.state;
     if (computerTimeoutRef) clearTimeout(computerTimeoutRef);
-    this.setState({ computerRunning: 0, gameHasStarted: false });
+    this.setState({ computerRunning: 0, gameHasStarted: false, winner: null });
   };
 
   handleNewGame = () => {
@@ -140,7 +145,7 @@ class CaterpilarGame extends Component {
 
   handleShowSettings = () => {
     this.stopGame();
-    this.setState({ showSettings: true });
+    this.setState({showSettings: true });
   };
 
   handleSettingsChange = async newState => {
@@ -171,7 +176,8 @@ class CaterpilarGame extends Component {
           changeLevel={this.handleLevelChange}
           showSettings={this.handleShowSettings}
         />
-        <div>{winner}</div>
+        
+        <Winner winner={winner} newGame={this.handleNewGame} />
         {(showSettings && (
           <Settings
             handleSettingsChange={this.handleSettingsChange}

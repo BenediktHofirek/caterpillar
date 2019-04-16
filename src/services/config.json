@@ -5,6 +5,11 @@
   "player1HeadColor": "#996600",
   "itemColor": "green",
   "emptyCellColor": "white",
+  "gameOverMessages": [
+    { "id": 0, "bgc": "rgba(0, 179, 0, 0.8)", "c": "#004d00" },
+    { "id": 1, "bgc": "rgba(255, 128, 128, 0.8)", "c": "#b30000" },
+    { "id": "draw", "bgc": "rgba(255, 153, 51, 0.8)", "c": "#663300" }
+  ],
   "computerLevelRange": [
     5,
     4,

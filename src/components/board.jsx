@@ -9,7 +9,7 @@ const Board = ({
   onKeyDown,
 }) => {
   return (
-    <table onKeyDown={onKeyDown} tabIndex="0">
+    <table onKeyDown={onKeyDown} tabIndex="0" ref={input => input && input.focus()}>
       <tbody>
         {makeBoard(boardSize, boardCells, playersColors, itemColor, emptyCellColor)}
       </tbody>

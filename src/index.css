@@ -6,6 +6,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
 }
 
 #root {
@@ -37,12 +39,19 @@ header h1 {
   color: #b35900;
 }
 
-nav {
+.caterpillar-game {
+  margin: 0px 0px auto 0px;
+  padding: 0px;
+  float: left;
+  width: 100%;
+}
+
+.caterpillar-game nav {
   margin: 0px auto;
   float: center;
 }
 
-nav .game-nav {
+.caterpillar-game nav .game-nav {
   margin: 0px auto;
   float: left;
   width: 100%;
@@ -50,24 +59,17 @@ nav .game-nav {
   max-width: 800px;
 }
 
-nav .game-nav .player-information {
+.caterpillar-game nav .game-nav .player-information {
   min-width: 6vw;
   margin: 0.5vw 0px;
   float: left;
 }
 
-nav .game-nav .player-information .player-color {
+.caterpillar-game nav .game-nav .player-information .player-color {
   float: left;
   margin: 0px 0.5vw;
   width: 25px;
   height: 25px;
-}
-
-.caterpillar-game {
-  margin: 0px 0px auto 0px;
-  padding: 0px;
-  float: left;
-  width: 100%;
 }
 
 .caterpillar-game table {
@@ -76,6 +78,11 @@ nav .game-nav .player-information .player-color {
   padding: 0px;
   border-collapse: collapse;
   border: 1px solid #774020;
+  z-index: 1;
+}
+
+.caterpillar-game table:focus {
+  outline: none;
 }
 
 .caterpillar-game table td {
@@ -111,5 +118,33 @@ footer {
   margin: 0px;
   padding: 0.5vh;
   background-color: #4d9900;
+}
+
+.game-over-message-wrapper {
+  z-index: 10;
+  position: fixed;
+  top: 35vh;
+  width: 100vw;
+  height: 150px;
+}
+
+.game-over-message-wrapper .game-over-message {
+  z-index: 10;
+  padding: 30px 0;
+  width: 350px;
+  height: 150px;
+  margin: 0px auto auto auto;
+  text-align: center;
+  font-size: 10rem;
+  border-radius: 10px;
+}
+
+.game-over-message-wrapper .game-over-message button {
+  position: relative;
+  bottom: 100px;
+  margin: auto;
+  float: center;
+  width: 130px;
+  font-size: 1rem;
 }
 /*# sourceMappingURL=index.css.map */
