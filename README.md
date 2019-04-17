@@ -1,3 +1,3 @@
 A simple typing game for practising touch-typing. 
-Move with your caterpillar by pressing vertically or horizontally by pressing displayed key 
-and try to collect as muchgreen items as possible!
+Move with your caterpillar horizontally or vertically by pressing displayed char on your keyboard 
+and try to collect as much green items as possible!
